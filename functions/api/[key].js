@@ -13,7 +13,7 @@ async function Delete({ params, env, next }) {
 }
 
 export async function onRequestGet({ params, env }) {
-  if (params.key) return new Response(await env.KV.get(params.key));
+  if (params.key && params.key.startsWith("public:")) return new Response(await env.KV.get(params.key));
   else return new Response(null, { status: 404 });
 }
 
