@@ -1,1 +1,1 @@
-xnxnxnj
+throw new Error("error");
