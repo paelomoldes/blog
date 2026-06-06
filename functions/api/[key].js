@@ -1,6 +1,8 @@
-async function getResponse({ params, env }) {
-  const value = await env.KV.get(params.key);
-  return new Response(value, { status: value == null ? 404 : 200 })
+async function getResponse({ params, env }, cache = false) {
+  const value = await env.KV.get(params.key, { cacheTtl: cache ? Number(env.KV_CACHETTL) : 30 }), options = {};
+  if (value == null) options.status = 404;
+  else options.headers = { "Cache-Control": cache ? "max-age=" + env.KV_CACHETTL : "no-store" };
+  return new Response(value, options);
 }
 
 function authentication({ env, next, request }) {
@@ -13,7 +15,7 @@ function success() {
 }
 
 async function GetPublic(context) {
-  if (context.params.key.startsWith(context.env.KV_PUBLIC)) return getResponse(context);
+  if (context.params.key.startsWith(context.env.KV_PUBLIC)) return getResponse(context, true);
   else return context.next();
 }
 
