@@ -1,5 +1,24 @@
+async function getResponse({ params, env }) {
+  const value = await env.KV.get(params.key);
+  return new Response(value, { status: value == null ? 404 : 200 })
+}
+
+function authentication({ env, next, request }) {
+  if (request.headers.get("x-api-key") != env.API_KEY) return new Response(null, { status: 403 });
+  return next();
+}
+
 function success() {
   return new Response(null, { status: 204 });
+}
+
+async function GetPublic(context) {
+  if (context.params.key.startsWith(context.env.KV_PUBLIC)) return getResponse(context);
+  else return context.next();
+}
+
+async function GetPrivate(context) {
+  return getResponse(context);
 }
 
 async function PostPut({ params, env, next, request }) {
@@ -12,11 +31,7 @@ async function Delete({ params, env, next }) {
   return next();
 }
 
-export async function onRequestGet({ params, env }) {
-  if (params.key && params.key.startsWith("public:")) return new Response(await env.KV.get(params.key));
-  else return new Response(null, { status: 404 });
-}
-
-export const onRequestPost   = [PostPut, success];
-export const onRequestPut    = [PostPut, success];
-export const onRequestDelete = [Delete, success];
+export const onRequestGet    = [GetPublic, authentication, GetPrivate];
+export const onRequestPost   = [authentication, PostPut, success];
+export const onRequestPut    = [authentication, PostPut, success];
+export const onRequestDelete = [authentication, Delete, success];
