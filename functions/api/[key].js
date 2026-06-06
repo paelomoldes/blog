@@ -1,7 +1,7 @@
 async function getResponse({ params, env }, cache = false) {
-  const value = await env.KV.get(params.key, { cacheTtl: cache ? Number(env.KV_CACHETTL) : 30 }), options = {};
+  const { value, metadata } = await env.KV.getWithMetadata(params.key, { cacheTtl: cache ? Number(env.KV_CACHETTL) : 30 }), options = {};
   if (value == null) options.status = 404;
-  else options.headers = { "Cache-Control": cache ? "max-age=" + env.KV_CACHETTL : "no-store" };
+  else options.headers = { "cache-control": cache ? "max-age=" + env.KV_CACHETTL : "no-store", "x-kv-metadata": metadata.metadata };
   return new Response(value, options);
 }
 
@@ -24,7 +24,7 @@ async function GetPrivate(context) {
 }
 
 async function PostPut({ params, env, next, request }) {
-  await env.KV.put(params.key, await request.text());
+  await env.KV.put(params.key, await request.text(), { metadata: { metadata: request.headers.get("x-kv-metadata") } });
   return next();
 }
 
