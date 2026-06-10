@@ -16,16 +16,16 @@ export const onRequestPut = [
   authentication,
   async ({ params, env, request }) => {
     cont key = `public:${NS}:${params.post}:`;
-    const keyExists = (await env.KV.list({ prefix: key, limit: 1 })).keys[0]?.name;
+    const status = (await env.KV.list({ prefix: key, limit: 1 })).keys[0]?.name ? 204 : 201;
     await env.KV.put(key, await request.text());
-    return new Response(null, { status: keyExists ? 204 : 201 });
+    return new Response(null, { status });
   }
 ];
 
 export const onRequestDelete = [
   authentication,
   async ({ params, env }) => {
-    await env.KV.delete(`${env.KV_PUBLIC}:${NS}:${params.post}:`);
+    await env.KV.delete(`public:${NS}:${params.post}:`);
     return new Response(null, { status: 204 });
   }
 ];
