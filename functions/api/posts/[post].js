@@ -6,7 +6,7 @@ function authentication({ env, next, request }) {
 }
 
 export async function onRequestGet({ params, env }) {
-  const { value, metadata } = await env.KV.getWithMetadata(`${env.KV_PUBLIC}:${NS}:${params.post}:`), options = {};
+  const value = await env.KV.get(`public:${NS}:${params.post}:`), options = {};
   if (value == null) options.status = 404;
   else options.headers = { "content-type": "application/json" };
   return new Response(value, options);
@@ -15,9 +15,10 @@ export async function onRequestGet({ params, env }) {
 export const onRequestPut = [
   authentication,
   async ({ params, env, request }) => {
-    const key = (await env.KV.list({ prefix: `${env.KV_PUBLIC}:${NS}:${params.post}:`, limit: 1 })).keys[0]?.name;
+    cont key = `public:${NS}:${params.post}:`;
+    const keyExists = (await env.KV.list({ prefix: key, limit: 1 })).keys[0]?.name;
     await env.KV.put(key, await request.text());
-    return new Response(null, { status: key ? 204 : 201 });
+    return new Response(null, { status: keyExists ? 204 : 201 });
   }
 ];
 
