@@ -15,7 +15,7 @@ export async function onRequestGet({ params, env }) {
 export const onRequestPut = [
   authentication,
   async ({ params, env, request }) => {
-    const key = await env.KV.list({ prefix: `${env.KV_PUBLIC}:${NS}:${params.post}:`, limit: 1 }).keys[0]?.name;
+    const key = (await env.KV.list({ prefix: `${env.KV_PUBLIC}:${NS}:${params.post}:`, limit: 1 })).keys[0]?.name;
     await env.KV.put(key, await request.text());
     return new Response(null, { status: key ? 204 : 201 });
   }
