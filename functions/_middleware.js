@@ -1,9 +1,14 @@
-export async function onRequest({ env, next, request }) {
-  try {
-    return await next();
-  } catch (e) {
-    const status = 500;
-    if (request.headers.get("x-api-key") == env.API_KEY) return new Response(`${e.message}\n${e.stack}`, { status });
-    else return new Response(null, { status });
+export const onRequest = [
+  async ({ env, next, request }) => {
+    try {
+      return await next();
+    } catch (e) {
+      return new Response(`${e.message}\n${e.stack}`, { status: 500 });
+    }
+  },
+  async ({ next }) => {
+    const response = await next().clone();
+    response.headers.set('set-cookie', `csrf-token=${ crypto.randomUUID() }; Domain=paelo.pages.dev; Path=/; SameSite=Strict`);
+    return response;
   }
-}
+];
