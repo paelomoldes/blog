@@ -3,7 +3,7 @@
 <head>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-  while (!(await (await fetch('/api/authorization', { headers: { 'x-api-key': decodeURIComponent(document.cookie.split('; ').find((row) => row.startsWith('__Secure-API_key='))?.split('=')[1] ?? '') } }).json())) { const apiKey = prompt("Enter API key") ?? ''; document.cookie = `__Secure-API_key=${apiKey}; Domain=paelo.pages.dev; Path=/admin/; SameSite=Strict; Secure`; }
+  while (!(await (await fetch('/api/authorization', { headers: { 'x-api-key': decodeURIComponent(document.cookie.split('; ').find((row) => row.startsWith('__Secure-API_key='))?.split('=')[1] ?? '') } }).json())) { const apiKey = encodeURIComponent(prompt("Enter API key") ?? ''); document.cookie = `__Secure-API_key=${apiKey}; Domain=paelo.pages.dev; Path=/admin/; SameSite=Strict; Secure`; }
 });
 </script>
 </head>
