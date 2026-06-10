@@ -18,10 +18,15 @@
     const About = {
       template: `<div><h2>About</h2><p>This is the about page.</p></div>`
     }
+    
+    const NotFound = {
+      template: `<h2>404 - Page not found</h2>`
+    }
 
     const routes = [
       { path: '/', component: Home },
-      { path: '/about', component: About }
+      { path: '/about', component: About },
+      { path: '/:pathMatch(.*)', component: NotFound }
     ]
 
     const router = VueRouter.createRouter({
