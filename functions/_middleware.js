@@ -1,7 +1,9 @@
-export async function onRequest(context) {
+export async function onRequest({ env, next, request }) {
   try {
-    return await context.next();
+    return await next();
   } catch (e) {
-    return new Response(null, { status: 500 });
+    const status = 500;
+    if (request.headers.get("x-api-key") == env.API_KEY) return new Response(e.message, { status });
+    else return new Response(null, { status });
   }
 }
