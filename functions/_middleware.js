@@ -7,7 +7,7 @@ export const onRequest = [
     }
   },
   async ({ next }) => {
-    const response = await next().clone();
+    const response = (await next()).clone();
     response.headers.set('set-cookie', `csrf-token=${ crypto.randomUUID() }; Domain=paelo.pages.dev; Path=/; SameSite=Strict`);
     return response;
   }
