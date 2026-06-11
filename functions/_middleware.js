@@ -9,8 +9,8 @@ export const onRequest = [
   async ({ env, request, next }) => {
     const response = (await next()).clone();
     if (request.url.startsWith('https:')) response.headers.set('strict-transport-security', 'max-age=31536000');
-    response.headers.set('content-security-policy', env.ContentSecurityPolicy);
-    response.headers.set('permissions-policy', env.PermissionsPolicy);
+    const ContentSecurityPolicy = env.ContentSecurityPolicy?.trim(); if (ContentSecurityPolicy) response.headers.set('content-security-policy', ContentSecurityPolicy);
+    const PermissionsPolicy = env.PermissionsPolicy?.trim(); if (PermissionsPolicy) response.headers.set('permissions-policy', PermissionsPolicy);
     response.headers.set('x-frame-options', 'SAMEORIGIN');
     response.headers.set('set-cookie', `csrf-token=${ crypto.randomUUID() }; Domain=paelo.pages.dev; Path=/; SameSite=Strict`);
     return response;
