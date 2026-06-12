@@ -1,3 +1,5 @@
-export function onRequestGet({ env, request }) {
-  return Response.json(request.headers.get("cookie").split('; ').find((row) => row.startsWith('__Http-Authorization='))?.split('=')[1] == env.API_KEY);
+import { isAdmin } from '../../../inc/functions.js';
+
+export function onRequestGet(context) {
+  return Response.json(isAdmin(context));
 }

@@ -1,8 +1,10 @@
+import { isAdmin } from '../../../inc/functions.js';
+
 const NS = 'post';
 
-function authentication({ env, next, request }) {
-  if (request.headers.get("cookie").split('; ').find((row) => row.startsWith('__Http-Authorization='))?.split('=')[1] != env.API_KEY) return new Response(null, { status: 403 });
-  return next();
+function authentication(context) {
+  if (isAdmin(context)) return new Response(null, { status: 403 });
+  return context.next();
 }
 
 export async function onRequestGet({ params, env }) {
