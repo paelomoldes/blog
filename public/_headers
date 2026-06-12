@@ -1,2 +1,7 @@
-/assets/*
-  cache-control: public, max-age=31556952, immutable
+https://paelo.pages.dev/*
+  strict-transport-security: max-age=31536000
+
+/*
+  permissions-policy: camera=(self), geolocation=(), payment=()
+  x-frame-options: SAMEORIGIN
+  link: <https://unpkg.com>; rel="preconnect"

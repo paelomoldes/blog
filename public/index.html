@@ -1,55 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>test</title>
-  <script src="https://unpkg.com/vue@3.5.38/dist/vue.global.js"></script>
-  <script src="https://unpkg.com/vue-router@5.1.0/dist/vue-router.global.js"></script>
-</head>
-<body>
-  <div id="app"></div>
+<noscript>
+  <meta http-equiv="refresh" content="0;url=https://paelo.pages.dev/noscript.html">
+</noscript>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>test</title>
 
-  <script>
+<!-- templates start -->
+
+<template id="app">
+  <div>
+    <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
+    </nav>
+    <router-view></router-view>
+  </div>
+</template>
+
+<template id="notfound">
+  <h1>404 Not Found</h1>
+  <p>This page does not exist or is removed</p>
+</template>
+
+<!-- templates end -->
+
+<script>
 {
-    const Home = {
-      template: `<div><h2>Home</h2><p>This is the home page.</p></div>`
+
+  function init() {
+
+/* -------------------------
+   Simulated API data
+   In a real project, replace fetch calls with real API endpoints
+---------------------------- */
+const postsList = [
+  { id: 1, title: 'Getting Started with Vue' },
+  { id: 2, title: 'Understanding Vue Router' },
+  { id: 3, title: 'Building a Blog' }
+];
+
+const postsContent = {
+  1: 'Vue is a progressive JavaScript framework for building user interfaces...',
+  2: 'Vue Router allows you to build single-page applications with multiple routes...',
+  3: 'In this tutorial we create a simple blog using Vue 3 and Vue Router...'
+};
+
+/* -------------------------
+   Components
+---------------------------- */
+
+// Home page: lists all posts
+const Home = {
+  data() {
+    return { posts: [] };
+  },
+  async mounted() {
+    // Simulate fetching metadata from API
+    await new Promise(res => setTimeout(res, 300)); // simulate network delay
+    this.posts = postsList;
+  },
+  template: `
+    <div>
+      <h1>My Blog</h1>
+      <div v-for="post in posts" :key="post.id" class="post">
+        <h2>
+          <router-link :to="'/post/' + post.id">
+            {{ post.title }}
+          </router-link>
+        </h2>
+      </div>
+    </div>
+  `
+};
+
+// Post page: fetches post content on demand
+const Post = {
+  data() {
+    return {
+      post: null,
+      loading: true
+    };
+  },
+  async mounted() {
+    const id = this.$route.params.id;
+
+    // Simulate fetching post content from API
+    await new Promise(res => setTimeout(res, 500)); // simulate network delay
+    const content = postsContent[id];
+
+    if (content) {
+      this.post = { id, title: postsList.find(p => p.id == id).title, content };
     }
 
-    const About = {
-      template: `<div><h2>About</h2><p>This is the about page.</p></div>`
-    }
-    
-    const NotFound = {
-      template: `<h2>404 - Page not found</h2>`
-    }
+    this.loading = false;
+  },
+  template: `
+    <div>
+      <div v-if="loading">Loading post...</div>
+      <div v-else-if="post">
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.content }}</p>
+        <p><router-link to="/">← Back to Home</router-link></p>
+      </div>
+      <div v-else>
+        <h2>Post not found</h2>
+        <p><router-link to="/">← Back to Home</router-link></p>
+      </div>
+    </div>
+  `
+};
 
-    const routes = [
-      { path: '/', component: Home },
-      { path: '/about', component: About },
-      { path: '/:pathMatch(.*)', component: NotFound }
-    ]
+/* -------------------------
+   Router setup
+---------------------------- */
+const routes = [
+  { path: '/', component: Home },
+  { path: '/post/:id', component: Post },
+  { path: '/:pathMatch(.*)*', component: template('notfound') }
+]
 
-    const router = VueRouter.createRouter({
-      history: VueRouter.createWebHistory(),
-      routes
-    })
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHashHistory(),
+  routes
+})
 
-    const app = Vue.createApp({
-      template: `
-        <div>
-          <nav>
-            <router-link to="/">Home</router-link> |
-            <router-link to="/about">About</router-link>
-          </nav>
-          <router-view></router-view>
-        </div>
-      `
-    })
+/* -------------------------
+   App setup
+---------------------------- */
+const app = Vue.createApp(template('app'))
 
-    app.use(router)
-    app.mount('#app')
+app.use(router)
+app.mount(document.body)
+
+  }
+
+  function template(id) {
+    return { template: document.getElementById(id).innerHTML };
+  }
+
+  window.addEventListener('load', init)
 }
-  </script>
-</body>
+</script>
+<script src="https://unpkg.com/vue@3.5.38/dist/vue.global.js"></script>
+<script src="https://unpkg.com/vue-router@5.1.0/dist/vue-router.global.js"></script>
+</head>
+<body></body>
 </html>

@@ -1,7 +1,7 @@
 const NS = 'post';
 
 function authentication({ env, next, request }) {
-  if (request.headers.get("x-api-key") != env.API_KEY) return new Response(null, { status: 403 });
+  if (request.headers.get("cookie").split('; ').find((row) => row.startsWith('__Http-Authorization='))?.split('=')[1] != env.API_KEY) return new Response(null, { status: 403 });
   return next();
 }
 
