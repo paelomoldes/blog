@@ -47,8 +47,8 @@ export async function onRequest(context) {
     await theme.component('footer'),
     await theme.template('index'),
     await theme.template('404'),
-    vue,
     script,
+    vue,
     footer
   ];
   
