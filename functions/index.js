@@ -19,7 +19,7 @@ class Theme {
 
   async component(component) {
     try {
-      return await import(`${ this.#root }/${ component }.html`);
+      return await import(`${ this.#root }/${ component }.html`, { with: { type: 'text' } });
     } catch (e) {
       return '';
     }
