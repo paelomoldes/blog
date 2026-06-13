@@ -1,3 +1,7 @@
+export async function importText(moduleName) {
+  return (await import(moduleName, { with: { type: 'text' } })).default;
+}
+
 export function getCookie({ request }, name) {
   return request.headers.get('cookie')?.split('; ').find((row) => row.startsWith(`${name}=`))?.split('=')[1];
 }

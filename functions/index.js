@@ -1,3 +1,5 @@
+import importText from '../inc/functions.js';
+
 class Theme {
 
   #root;
@@ -19,7 +21,7 @@ class Theme {
 
   async component(component) {
     try {
-      return await import(`${ this.#root }/${ component }.html`, { with: { type: 'text' } });
+      return await importText(`${ this.#root }/${ component }.html`);
     } catch (e) {
       return '';
     }
