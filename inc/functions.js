@@ -1,8 +1,5 @@
 export async function importText(moduleName) {
-  let keys = '';
-  const mod = await import(moduleName, { with: { type: 'text' } });
-  for (k in mod) keys += k + '\n';
-  return keys;
+  return (await import(moduleName, { assert: { type: 'text' } })).default;
 }
 
 export function getCookie({ request }, name) {
