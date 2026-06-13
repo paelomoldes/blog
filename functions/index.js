@@ -38,7 +38,7 @@ class Theme {
     try {
       return await importText(`${ this.#root }/${ component }.html`);
     } catch (e) {
-      return '';
+      return e.message;
     }
   }
 
