@@ -1,0 +1,2 @@
+/themes/*.html
+  content-security-policy: default-src 'none'

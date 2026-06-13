@@ -2,7 +2,7 @@ import { importText } from '../inc/functions.js';
 
 class Theme {
 
-  #root;
+  #base;
 
   #header;
   #footer;
@@ -11,8 +11,8 @@ class Theme {
 
   constructor({ env }) {
 
-    const themeName = env.THEME?.trim().split('/').join('');
-    this.#root = themeName ? `../themes/${ themeName }` : '../inc/theme-fallback';
+    const themeName = env.THEME?.trim().split('/').join('') ?? 'default';
+    this.#base = `./themes/${ themeName }`;
 
   }
   
@@ -36,7 +36,7 @@ class Theme {
 
   async component(component) {
     try {
-      return await importText(`${ this.#root }/${ component }.html`);
+      return await importText(`${ this.#base }/${ component }.html`);
     } catch (e) {
       return e.message;
     }
