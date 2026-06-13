@@ -1,4 +1,4 @@
-import importText from '../inc/functions.js';
+import { importText } from '../inc/functions.js';
 
 class Theme {
 

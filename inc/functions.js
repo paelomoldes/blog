@@ -1,5 +1,5 @@
 export async function importText(moduleName) {
-  return await (await fetch(moduleName)).text();
+  return await import(moduleName, { assert: { type: 'text' } });
 }
 
 export function getCookie({ request }, name) {
