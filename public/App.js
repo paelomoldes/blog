@@ -1,4 +1,3 @@
-<script>
 {
 
   function init() {
@@ -114,4 +113,3 @@ app.mount(document.body)
 
   window.addEventListener('load', init)
 }
-</script>
