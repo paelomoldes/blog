@@ -1,6 +1,6 @@
 export async function importText(moduleName) {
   const mod = import(moduleName, { assert: { type: 'text' } });
-  ley keys = '';
+  let keys = '';
   for (k in mod) keys+= k+'\n';
   return keys;
 }
