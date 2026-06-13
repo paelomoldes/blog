@@ -7,16 +7,31 @@ class Theme {
   #header;
   #footer;
 
+  #output;
+
   constructor({ env }) {
 
-    {
-      const themeName = env.THEME?.trim().split('/').join('');
-      this.#root = themeName ? `../themes/${ themeName }` : '../inc/theme-fallback';
-    }
+    const themeName = env.THEME?.trim().split('/').join('');
+    this.#root = themeName ? `../themes/${ themeName }` : '../inc/theme-fallback';
 
-    this.#header = this.component('header');
-    this.#footer = this.component('footer');
+  }
+  
+  async init() {
 
+    this.#header = await this.component('header');
+    this.#footer = await this.component('footer');
+
+    this.#output = '';
+
+  }
+
+  update(chunk) {
+    this.#output += chunk;
+    return this;
+  }
+
+  finalize() {
+    return this.#output;
   }
 
   async component(component) {
@@ -41,24 +56,26 @@ import script from '../inc/basic-components/script.html';
 import footer from '../inc/basic-components/footer.html';
 
 export async function onRequest(context) {
-  const theme = new Theme(context);
-  const components = [
-    header,
-    await theme.component('header'),
-    app,
-    await theme.component('footer'),
-    await theme.template('index'),
-    await theme.template('404'),
-    script,
-    vue,
-    footer
-  ];
-  
-  const headers = new Headers();
+  const theme = new Theme(context), headers = new Headers();
+
+  await theme.init();
+
+  const output = theme
+    .update(header)
+    .update(await theme.component('header'))
+    .update(app)
+    .update(await theme.component('footer'))
+    .update(await theme.template('index'))
+    .update(await theme.template('404'))
+    .update(script)
+    .update(vue)
+    .update(footer)
+    .finalize();
+
   headers.set('content-type', 'text/html; charset=utf-8');
   headers.set('x-frame-options', 'SAMEORIGIN');
   headers.set('link', '<https://unpkg.com>; rel="preconnect"');
 
-  return new Response(components.join(''), { headers });
+  return new Response(output, { headers });
 
 }
