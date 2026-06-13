@@ -1,5 +1,5 @@
 export async function importText(moduleName) {
-  return (await import(moduleName, { with: { type: 'text' } })).default;
+  return await (await import(moduleName, { with: { type: 'text' } })).default;
 }
 
 export function getCookie({ request }, name) {
