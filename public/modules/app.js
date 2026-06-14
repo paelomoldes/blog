@@ -1,5 +1,5 @@
-import { createApp } from 'https://unpkg.com/vue@3.5.38/dist/vue.global.js';
-import { createRouter, createWebHistory } from 'https://unpkg.com/vue-router@5.1.0/dist/vue-router.global.js';
+import { createApp } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
 /* import config from './modules/config.json' with { type: 'json' } */
 const config = await (await fetch('./modules/config.json')).json();
 /* import index from './modules/theme/index.html' with { type: 'text' } */
