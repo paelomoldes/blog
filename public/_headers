@@ -6,4 +6,5 @@
   ! link
 
 /modules/theme/*.html
+  ! content-security-policy
   content-security-policy: default-src 'none'
