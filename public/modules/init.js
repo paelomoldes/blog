@@ -6,7 +6,8 @@ const config = await (await fetch('/modules/config.json')).json()
 
 const INDEX_FALLBACK_SIGNATURE = '<!--/-->',
       THEME_INDEX              = 'index',
-      THEME_STYLE              = 'style'
+      THEME_STYLE              = 'style',
+      THEME_404                = '404'
 
 
 function moduleNameHtml(templateId) {
@@ -26,8 +27,9 @@ async function load(templateId) {
 
   try {
     const moduleName = moduleNameHtml(templateId)
-    const response   = await fetch(moduleName),
-          error      = new TypeError(`Failed to fetch dynamically imported module: ${ moduleName }`)
+
+    const response = await fetch(moduleName),
+          error = new TypeError(`Failed to fetch dynamically imported module: ${ moduleName }`)
 
     if (response.status != 200) throw error
 
@@ -49,9 +51,35 @@ async function load(templateId) {
 
   template = functions.template || template
 
-  if (template) template = `<link href="${ moduleNameCss(templateId) }" rel="stylesheet">` + template
+  if (template && templateId !== THEME_INDEX) template = `<link href="${ moduleNameCss(templateId) }" rel="stylesheet">` + template
 
   return { ...functions, template }
+}
+
+
+{
+  const preload = document.createElement('link')
+  preload.rel = 'preload'
+  preload.href = moduleNameHtml(THEME_404)
+  preload.as = 'fetch'
+  preload.fetchPriority = 'high'
+  document.head.appendChild(preload)
+}
+
+{
+  const preload = document.createElement('link')
+  preload.rel = 'modulepreload'
+  preload.href = moduleNameJs(THEME_404)
+  preload.fetchPriority = 'high'
+  document.head.appendChild(preload)
+}
+
+{
+  const preload = document.createElement('link')
+  preload.rel = 'preload'
+  preload.href = moduleNameCss(THEME_404)
+  preload.as = 'style'
+  document.head.appendChild(preload)
 }
 
 
@@ -65,6 +93,7 @@ for (let templateId in config.routes) {
 
   if (templateId === THEME_INDEX) continue
   if (templateId === THEME_STYLE) continue
+  if (templateId === THEME_404) continue
 
   const component = () => load(templateId)
 
@@ -94,6 +123,8 @@ for (let templateId in config.routes) {
     document.head.appendChild(preload)
   }
 }
+
+routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
 
 const app = createApp(await load(THEME_INDEX))

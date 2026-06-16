@@ -1,7 +1,6 @@
 {
   "routes": {
     "home": "/",
-    "404": "/:pathMatch(.*)*",
     "single": "/post/:id"
   }
 }
