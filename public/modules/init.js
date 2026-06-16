@@ -131,7 +131,7 @@ const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to, from, next) => {
 
-  if (to.name !== THEME_404) next()
+  if (to.name !== THEME_404) return next()
 
   const key = `NotFound:${ to.fullPath }`
 
