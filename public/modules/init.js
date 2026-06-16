@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-// import config from './modules/config.json' with { type: 'json' }
-const config = await (await fetch('./modules/config.json')).json()
+// import config from '/modules/config.json' with { type: 'json' }
+const config = await (await fetch('/modules/config.json')).json()
 
 
 const INDEX_FALLBACK_SIGNATURE = '<!--/-->',
