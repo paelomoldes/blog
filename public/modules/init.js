@@ -138,7 +138,7 @@ router.beforeEach((to, from, next) => {
   if (sessionStorage.getItem(key)) return
 
   sessionStorage.setItem(key, 'true')
-  location.reload()
+  location.href = to.fullPath
 })
 
 
