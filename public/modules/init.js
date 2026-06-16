@@ -124,10 +124,24 @@ for (let templateId in config.routes) {
   }
 }
 
-routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
+routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404), name: THEME_404 })
+
+
+const router = createRouter({ history: createWebHistory(), routes })
+
+router.beforeEach((to, from, next) => {
+
+  if (to.name !== THEME_404) next()
+
+  const key = `NotFound:${ to.fullPath }`
+
+  if (sessionStorage.getItem(key)) return
+
+  sessionStorage.setItem(key, 'true')
+  location.reload()
+})
 
 
 const app = createApp(await load(THEME_INDEX))
-
-app.use(createRouter({ history: createWebHistory(), routes }))
+app.use(router)
 app.mount(document.body)
