@@ -1,7 +1,5 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-// import config from '/modules/config.json' with { type: 'json' }
-const config = await (await fetch('/modules/config.json')).json()
 
 
 const INDEX_FALLBACK_SIGNATURE = '<!--/-->',
@@ -54,6 +52,17 @@ async function load(templateId) {
   if (template && templateId !== THEME_INDEX) template = `<link href="${ moduleNameCss(templateId) }" rel="stylesheet">` + template
 
   return { ...functions, template }
+}
+
+
+let config
+
+try {
+  config = await (await fetch('/modules/config.json')).json()
+} catch (e) {
+  console.error(e)
+  document.body.innerHTML = document.getElementById('error')?.innerHTML || e.message
+  throw e
 }
 
 
