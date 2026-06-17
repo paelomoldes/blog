@@ -79,12 +79,8 @@ try {
   throw e
 }
 
-
 const app = createApp(await load(THEME_INDEX)),
-      router = createRouter({ history: createWebHistory(), routes: [] })
-
-app.use(router)
-app.mount(document.body)
+      router = createRouter({ history: createWebHistory() })
 
 
 {
@@ -154,6 +150,9 @@ for (let templateId in config.routes) {
 
 router.addRoute({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
+
+app.use(router)
+app.mount(document.body)
   </script>
   <noscript>
     <meta http-equiv="refresh" content="0;url=/noscript.html">
