@@ -79,7 +79,15 @@ try {
   throw e
 }
 
-const app = createApp(await load(THEME_INDEX))
+const app = createApp(await load(THEME_INDEX)),
+      router = createRouter({
+        history: createWebHistory(),
+        routes: [
+          { path: '/:pathMatch(.*)*', component: () => load(THEME_404) }
+        ]
+      })
+
+app.use(router)
 
 
 {
@@ -108,8 +116,6 @@ const app = createApp(await load(THEME_INDEX))
 }
 
 
-const routes = []
-
 for (let templateId in config.routes) {
 
   const path = config.routes[templateId]
@@ -122,7 +128,7 @@ for (let templateId in config.routes) {
 
   const component = () => load(templateId)
 
-  routes.push({ path, component })
+  router.addRoute({ path, component })
 
   {
     const preload = document.createElement('link')
@@ -149,12 +155,7 @@ for (let templateId in config.routes) {
   }
 }
 
-routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
-
-const router = createRouter({ history: createWebHistory(), routes })
-
-app.use(router)
 app.mount(document.body)
   </script>
   <noscript>
