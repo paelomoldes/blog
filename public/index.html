@@ -73,7 +73,9 @@ let config
 try {
   config = await (await fetch('/modules/config.json')).json()
 } catch (e) {
-  throw $.error({ error: e, message: 'Something went wrong' })
+  console.error(e)
+  document.body.textContent = e.message
+  throw e
 }
 
 
