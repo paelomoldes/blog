@@ -80,6 +80,13 @@ try {
 }
 
 
+const app = createApp(await load(THEME_INDEX)),
+      router = createRouter({ history: createWebHistory(), routes: [] })
+
+app.use(router)
+app.mount(document.body)
+
+
 {
   const preload = document.createElement('link')
   preload.rel = 'preload'
@@ -106,8 +113,6 @@ try {
 }
 
 
-const routes = []
-
 for (let templateId in config.routes) {
 
   const path = config.routes[templateId]
@@ -120,7 +125,7 @@ for (let templateId in config.routes) {
 
   const component = () => load(templateId)
 
-  routes.push({ path, component })
+  router.addRoute({ path, component })
 
   {
     const preload = document.createElement('link')
@@ -147,14 +152,8 @@ for (let templateId in config.routes) {
   }
 }
 
-routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
+router.addRoute({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
-
-const app = createApp(await load(THEME_INDEX)),
-      router = createRouter({ history: createWebHistory(), routes })
-
-app.use(router)
-app.mount(document.body)
   </script>
   <noscript>
     <meta http-equiv="refresh" content="0;url=/noscript.html">
