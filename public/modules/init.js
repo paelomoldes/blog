@@ -49,7 +49,7 @@ async function load(templateId) {
 
   template = functions.template || template
 
-  if (template && templateId !== THEME_INDEX) template = `<link href="${ moduleNameCss(templateId) }" rel="stylesheet">` + template
+  if (template && templateId !== THEME_INDEX) template = `<link href="${ moduleNameCss(templateId) }" rel="stylesheet">`.concat(template)
 
   return { ...functions, template }
 }
