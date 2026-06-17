@@ -80,12 +80,7 @@ try {
 }
 
 const app = createApp(await load(THEME_INDEX)),
-      router = createRouter({
-        history: createWebHistory(),
-        routes: [
-          { path: '/:pathMatch(.*)*', component: () => load(THEME_404) }
-        ]
-      })
+      router = createRouter({ history: createWebHistory(), routes: [] })
 
 app.use(router)
 
@@ -154,6 +149,8 @@ for (let templateId in config.routes) {
     document.head.appendChild(preload)
   }
 }
+
+router.addRouter({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
 
 app.mount(document.body)
