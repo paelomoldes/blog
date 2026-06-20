@@ -61,7 +61,7 @@ async function load(templateId) {
   {
     const moduleName = moduleNameJs(templateId)
     try {
-      functions = await import(moduleName)
+      ({ default: functions } = await import(moduleName))
     } catch (e) {
       console.error(new TypeError(`Failed to fetch dynamically imported module: ${ moduleName }`))
     }
@@ -116,11 +116,12 @@ const app = createApp(await load(THEME_INDEX))
 
 const routes = []
 
-for (let templateId in config.routes) {
+for (const path in config.routes) {
 
-  const path = config.routes[templateId]
-
-  templateId = templateId.replaceAll('/', '').trim().toLowerCase()
+  const templateId = config.routes[path]
+    .replaceAll('/', '')
+    .trim()
+    .toLowerCase()
 
   if (templateId === THEME_INDEX) continue
   if (templateId === THEME_STYLE) continue
@@ -155,6 +156,7 @@ for (let templateId in config.routes) {
   }
 }
 
+routes.push({ path: '/index.html', redirect: '/' })
 routes.push({ path: '/:pathMatch(.*)*', component: () => load(THEME_404) })
 
 
@@ -186,7 +188,7 @@ app.mount(document.body)
     }
   </style>
   <div class="fullscreen-loader">
-    <md-circular-progress indeterminate></md-circular-progress>
+    <md-circular-progress four-color indeterminate></md-circular-progress>
   </div>
 </body>
 </html>

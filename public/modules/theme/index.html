@@ -1,7 +1,70 @@
-<div>
-  <nav>
-    <router-link to="/">Home</router-link>
-    <router-link to="/about">About</router-link>
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet">
+<header class="md-header">
+  <div class="header-section start">
+    <md-icon-button aria-label="Open navigation menu" @click="Menu">
+      <md-icon>grid_view</md-icon>
+    </md-icon-button>
+    <span class="brand-title desktop-only">Store</span>
+    <div class="mobile-only mobile-nav-container">
+      <select class="mobile-nav-dropdown" @change="handleNavigation">
+        <option value="home">Home</option>
+        <option value="store" selected>Store</option>
+        <option value="collections">Collections</option>
+        <option value="about">About</option>
+      </select>
+    </div>
+  </div>
+
+  <nav class="header-navigation desktop-only">
+    <md-tabs aria-label="Main Navigation">
+      <md-primary-tab>Home</md-primary-tab>
+      <md-primary-tab active>Store</md-primary-tab>
+      <md-primary-tab>Collections</md-primary-tab>
+      <md-primary-tab>About</md-primary-tab>
+    </md-tabs>
   </nav>
-  <router-view></router-view>
-</div>
+
+  <div class="header-section end">
+<!--
+    <md-filled-tonal-icon-button aria-label="Search xproducts" @click="Home">
+      <md-icon>storefront</md-icon>
+    </md-filled-tonal-icon-button>
+-->
+    <md-icon-button aria-label="Search products" @click="Search">
+      <md-icon>search</md-icon>
+    </md-icon-button>
+
+    <md-icon-button aria-label="View shopping cart" @click="Cart">
+      <md-icon>shopping_cart</md-icon>
+    </md-icon-button>
+
+    <md-icon-button aria-label="View notifications" @click="Messages">
+      <md-icon>notifications</md-icon>
+    </md-icon-button>
+
+  </div>
+</header>
+<footer class="mobile-footer-nav">
+  <nav class="footer-nav-container">
+    <button class="footer-tab-item active" @click="navigateTo('home')">
+      <md-icon>home</md-icon>
+      <span class="tab-label">Home</span>
+    </button>
+
+    <button class="footer-tab-item" @click="navigateTo('store')">
+      <md-icon>storefront</md-icon>
+      <span class="tab-label">Store</span>
+    </button>
+
+    <button class="footer-tab-item" @click="navigateTo('collections')">
+      <md-icon>auto_awesome_motion</md-icon>
+      <span class="tab-label">Collections</span>
+    </button>
+
+    <button class="footer-tab-item" @click="navigateTo('about')">
+      <md-icon>info</md-icon>
+      <span class="tab-label">About</span>
+    </button>
+  </nav>
+</footer>
+<router-view />

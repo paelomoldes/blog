@@ -1,7 +1,6 @@
 {
   "routes": {
-    "home": "/",
-    "hello": "/helloworld",
-    "single": "/post/:id"
+    "/":      "store",
+    "/store": "store"
   }
 }
